@@ -112,3 +112,4 @@ copilot.data.migration.edit.xml
 encodings.xml
 indexLayout.xml
 vcs.xml
+*.DotSettings.user
