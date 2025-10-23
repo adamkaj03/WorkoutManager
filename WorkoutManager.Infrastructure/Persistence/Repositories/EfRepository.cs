@@ -15,6 +15,9 @@ internal class EfRepository<T>(WorkoutDbContext db) : IRepository<T> where T : c
 
     public Task<T?> GetByIdAsync(object id, CancellationToken ct = default)
         => _set.FindAsync([id], ct).AsTask();
+    
+    public async Task<List<T>> GetAllAsync(CancellationToken ct = default)
+        => await _set.ToListAsync(ct);
 
     public IQueryable<T> AsQueryable() => _set.AsQueryable();
 

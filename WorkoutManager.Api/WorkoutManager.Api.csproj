@@ -12,10 +12,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Repositories\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\WorkoutManager.Application\WorkoutManager.Application.csproj" />
       <ProjectReference Include="..\WorkoutManager.Domain\WorkoutManager.Domain.csproj" />
       <ProjectReference Include="..\WorkoutManager.Infrastructure\WorkoutManager.Infrastructure.csproj" />

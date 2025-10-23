@@ -1,6 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using WorkoutManager.Data;
 using System.Text.Json.Serialization;
+using WorkoutManager.Application.Interfaces;
+using WorkoutManager.Infrastructure.Extensions;
+using WorkoutManager.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,20 +19,19 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 });
 
 // Add DbContext
-builder.Services.AddDbContext<WorkoutDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddInfrastructure(builder.Configuration);
+
+builder.Services.AddScoped<IWorkoutProgramService, WorkoutProgramService>();
+builder.Services.AddScoped<IExerciseService, ExerciseService>();
+builder.Services.AddScoped<IExerciseGroupService, ExerciseGroupService>();
+builder.Services.AddScoped<IEquipmentService, EquipmentService>();
+builder.Services.AddScoped<IEquipmentCategoryService, EquipmentCategoryService>();
+builder.Services.AddScoped<IContraindicationService, ContraindicationService>();
 
 // Add controllers
 builder.Services.AddControllers();
 
 var app = builder.Build();
-
-// Initialize database with seed data
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    var context = services.GetRequiredService<WorkoutDbContext>();
-}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
