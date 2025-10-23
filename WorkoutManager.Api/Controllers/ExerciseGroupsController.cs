@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using WorkoutManager.Application.DTOs;
 using WorkoutManager.Application.Interfaces;
 using WorkoutManager.Models;
 
@@ -6,12 +8,8 @@ namespace WorkoutManager.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ExerciseGroupsController(IExerciseGroupService exerciseGroupService) : ControllerBase
+public class ExerciseGroupsController(IExerciseGroupService exerciseGroupService, IMapper mapper)
+    : CrudController<ExerciseGroup, ExerciseGroupDto>(exerciseGroupService, mapper)
 {
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<ExerciseGroup>>> GetAll()
-    {
-        var entities = await exerciseGroupService.GetAllExerciseGroupsAsync();
-        return Ok(entities);
-    }
+    
 }

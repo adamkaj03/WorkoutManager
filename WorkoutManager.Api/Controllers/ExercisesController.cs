@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using WorkoutManager.Application.Interfaces;
-using WorkoutManager.Data;
 using WorkoutManager.DTOs;
 using WorkoutManager.Models;
 
@@ -9,13 +8,16 @@ namespace WorkoutManager.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ExercisesController(IExerciseService exerciseService) : ControllerBase
+public class ExercisesController(IExerciseService exerciseService, IMapper mapper) 
+    : CrudController<Exercise, ExerciseDto>(exerciseService, mapper)
 {
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<Exercise>>> GetAll()
+    // 6. feladathoz tartozó GET végpont
+    [HttpGet("contraindication/{contraindicationId}")]
+    public async Task<ActionResult<IEnumerable<ExerciseDto>>> GetByContraindication(int contraindicationId)
     {
-        var entities = await exerciseService.GetAllExercisesAsync();
-        return Ok(entities);
+        var entities = await exerciseService.GetExerciseByContraindicationAsync(contraindicationId);
+        var dtos = mapper.Map<IEnumerable<ExerciseDto>>(entities);
+        return Ok(dtos);
     }
 }
 

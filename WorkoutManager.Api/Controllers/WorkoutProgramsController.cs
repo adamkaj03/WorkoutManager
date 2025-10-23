@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using WorkoutManager.Application.Interfaces;
-using WorkoutManager.Data;
-using WorkoutManager.Domain.Interfaces.Repositories;
 using WorkoutManager.DTOs;
 using WorkoutManager.Models;
 
@@ -10,13 +8,19 @@ namespace WorkoutManager.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class WorkoutProgramsController(IWorkoutProgramService workoutProgramService) : ControllerBase
+public class WorkoutProgramsController(IWorkoutProgramService workoutProgramService, IMapper mapper)
+    : CrudController<WorkoutProgram, WorkoutProgramDto>(workoutProgramService, mapper)
 {
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<WorkoutProgram>>> GetAll()
+    // 5. feladathoz tartozó GET végpont
+    [HttpGet("{id}")]
+    public async Task<ActionResult<WorkoutProgramDto>> GetFull(int id)
     {
-        var entities = await workoutProgramService.GetAllWorkoutProgramsAsync();
-        return Ok(entities);
+        var entity = await workoutProgramService.GetFullWorkoutProgramAsync(id);
+        if (entity == null)
+            return NotFound();
+
+        var dto = mapper.Map<WorkoutProgramDto>(entity);
+        return Ok(dto);
     }
 }
 

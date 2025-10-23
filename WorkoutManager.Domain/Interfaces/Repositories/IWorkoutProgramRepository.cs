@@ -4,5 +4,5 @@ namespace WorkoutManager.Domain.Interfaces.Repositories;
 
 public interface IWorkoutProgramRepository : IRepository<WorkoutProgram>
 {
-    
+    Task<WorkoutProgram?> GetFullWorkoutProgramAsync(int id, CancellationToken ct = default);
 }

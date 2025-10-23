@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using WorkoutManager.Data;
 using System.Text.Json.Serialization;
+using WorkoutManager.Application.Extensions;
 using WorkoutManager.Application.Interfaces;
 using WorkoutManager.Infrastructure.Extensions;
 using WorkoutManager.Infrastructure.Services;
@@ -30,6 +31,8 @@ builder.Services.AddScoped<IContraindicationService, ContraindicationService>();
 
 // Add controllers
 builder.Services.AddControllers();
+
+builder.Services.AddAppServices();
 
 var app = builder.Build();
 

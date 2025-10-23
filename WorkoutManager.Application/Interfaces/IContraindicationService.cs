@@ -2,13 +2,7 @@
 
 namespace WorkoutManager.Application.Interfaces;
 
-public interface IContraindicationService
+public interface IContraindicationService : ICrudService<Contraindication>
 {
-    Task<Contraindication> CreateContraindicationAsync(Contraindication contraindication);
-
-    Task<Contraindication> UpdateContraindicationAsync(int id, Contraindication contraindication);
-
-    Task DeleteContraindicationAsync(int id);
-
-    Task<IEnumerable<Contraindication>> GetAllContraindicationsAsync();
+    
 }

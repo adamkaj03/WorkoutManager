@@ -2,13 +2,9 @@
 
 namespace WorkoutManager.Application.Interfaces;
 
-public interface IEquipmentService
+public interface IEquipmentService : ICrudService<Equipment>
 {
-    Task<Equipment> CreateEquipmentAsync(Equipment equipment);
+    Task<IEnumerable<Equipment>> GetEquipmentByCategoryAsync(int categoryId);
 
-    Task<Equipment> UpdateEquipmentAsync(int id, Equipment equipment);
-
-    Task DeleteEquipmentAsync(int id);
-
-    Task<IEnumerable<Equipment>> GetAllEquipmentAsync();
+    Task<IEnumerable<Equipment>> GetEquipmentByContraindicationAsync(int contraindicationId);
 }

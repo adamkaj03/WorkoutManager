@@ -2,13 +2,6 @@
 
 namespace WorkoutManager.Application.Interfaces;
 
-public interface IExerciseGroupService
+public interface IExerciseGroupService : ICrudService<ExerciseGroup>
 {
-    Task<ExerciseGroup> CreateExerciseGroupAsync(ExerciseGroup exerciseGroup);
-
-    Task<ExerciseGroup> UpdateExerciseGroupAsync(int id, ExerciseGroup exerciseGroup);
-
-    Task DeleteExerciseGroupAsync(int id);
-
-    Task<IEnumerable<ExerciseGroup>> GetAllExerciseGroupsAsync();
 }

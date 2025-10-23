@@ -2,13 +2,7 @@
 
 namespace WorkoutManager.Application.Interfaces;
 
-public interface IWorkoutProgramService
+public interface IWorkoutProgramService : ICrudService<WorkoutProgram>
 {
-    Task<WorkoutProgram> CreateWorkoutProgramAsync(WorkoutProgram workoutProgram);
-    
-    Task<WorkoutProgram> UpdateWorkoutProgramAsync(int id, WorkoutProgram workoutProgram);
-    
-    Task DeleteWorkoutProgramAsync(int id);
-    
-    Task<IEnumerable<WorkoutProgram>> GetAllWorkoutProgramsAsync();
+    Task<WorkoutProgram?> GetFullWorkoutProgramAsync(int id);
 }

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using WorkoutManager.Data;
 using WorkoutManager.Domain.Interfaces.Repositories;
+using WorkoutManager.Models;
 
 namespace WorkoutManager.Infrastructure.Persistence.Repositories;
 
@@ -39,6 +40,26 @@ internal class EfRepository<T>(WorkoutDbContext db) : IRepository<T> where T : c
     public void Update(T entity) => _set.Update(entity);
     public void UpdateRange(IEnumerable<T> entities) => _set.UpdateRange(entities);
 
-    public void Remove(T entity) => _set.Remove(entity);
-    public void RemoveRange(IEnumerable<T> entities) => _set.RemoveRange(entities);
+    
+    // 7. feladathoz tartozó soft-delete
+    public void Remove(T entity)
+    { 
+        if (entity is BaseEntity baseEntity)
+        {
+            baseEntity.IsDeleted = true;
+            _set.Update(entity); // vagy _context.Entry(entity).State = EntityState.Modified;
+        }
+        else
+        {
+            _set.Remove(entity); // fallback, ha nem BaseEntity
+        }
+    }
+
+    public void RemoveRange(IEnumerable<T> entities)
+    {
+        foreach (var entity in entities)
+        {
+            Remove(entity);
+        }
+    }
 }
