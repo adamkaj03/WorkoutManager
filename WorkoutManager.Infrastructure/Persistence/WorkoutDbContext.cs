@@ -26,11 +26,14 @@ public class WorkoutDbContext : DbContext
             entity.Property(e => e.CodeName).IsRequired().HasMaxLength(50);
             entity.Property(e => e.Title).IsRequired().HasMaxLength(200);
             entity.Property(e => e.Description).HasMaxLength(1000);
+            entity.Property(e => e.MainWorkoutDurationMinutes).IsRequired();
             
+            // Many-to-many
             entity.HasMany(e => e.ExerciseGroups)
-                .WithOne(eg => eg.WorkoutProgram)
-                .HasForeignKey(eg => eg.WorkoutProgramId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .WithMany(eq => eq.WorkoutProgram)
+                .UsingEntity(j => j.ToTable("WorkoutProgramExerciseGroups"));
+            
+            entity.HasQueryFilter(e => !e.IsDeleted);
         });
 
         // Configure ExerciseGroup
@@ -38,7 +41,7 @@ public class WorkoutDbContext : DbContext
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
-            entity.Property(e => e.Order).IsRequired();
+            entity.HasQueryFilter(e => !e.IsDeleted);
         });
 
         // Configure Exercise
@@ -48,17 +51,18 @@ public class WorkoutDbContext : DbContext
             entity.Property(e => e.Name).IsRequired().HasMaxLength(200);
             entity.Property(e => e.Quantity).HasColumnType("decimal(18,2)");
             entity.Property(e => e.Unit).IsRequired().HasMaxLength(20);
-            entity.Property(e => e.Order).IsRequired();
 
-            entity.HasOne(e => e.Equipment)
+            // Many-to-One: Exercise -> ExerciseGroup
+            entity.HasMany(e => e.ExerciseGroups)
                 .WithMany(eq => eq.Exercises)
-                .HasForeignKey(e => e.EquipmentId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .UsingEntity(j => j.ToTable("ExerciseExerciseGroups"));
 
             // Many-to-Many: Exercise <-> Contraindication
             entity.HasMany(e => e.Contraindications)
                 .WithMany(c => c.Exercises)
                 .UsingEntity(j => j.ToTable("ExerciseContraindications"));
+            
+            entity.HasQueryFilter(e => !e.IsDeleted);
         });
 
         // Configure Equipment
@@ -77,6 +81,8 @@ public class WorkoutDbContext : DbContext
             entity.HasMany(e => e.Contraindications)
                 .WithMany(c => c.Equipment)
                 .UsingEntity(j => j.ToTable("EquipmentContraindications"));
+            
+            entity.HasQueryFilter(e => !e.IsDeleted);
         });
 
         // Configure EquipmentCategory
@@ -85,6 +91,7 @@ public class WorkoutDbContext : DbContext
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
             entity.Property(e => e.Description).HasMaxLength(500);
+            entity.HasQueryFilter(e => !e.IsDeleted);
         });
 
         // Configure Contraindication
@@ -93,6 +100,7 @@ public class WorkoutDbContext : DbContext
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
             entity.Property(e => e.Description).HasMaxLength(500);
+            entity.HasQueryFilter(e => !e.IsDeleted);
         });
     }
 }

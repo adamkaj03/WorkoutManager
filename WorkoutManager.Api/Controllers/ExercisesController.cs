@@ -19,5 +19,21 @@ public class ExercisesController(IExerciseService exerciseService, IMapper mappe
         var dtos = mapper.Map<IEnumerable<ExerciseDto>>(entities);
         return Ok(dtos);
     }
+    
+    [HttpPost("{exerciseId}/equipment/{equipmentId}")]
+    public async Task<IActionResult> AssignEquipmentToExercise(int exerciseId, int equipmentId)
+    {
+        await exerciseService.AssignEquipmentAsync(exerciseId, equipmentId);
+        return NoContent();
+    }
+
+    [HttpPost("{exerciseId}/contraindications")]
+    public async Task<IActionResult> AssignContraindicationsToExercise(
+        int exerciseId,
+        [FromBody] List<int> contraindicationIds)
+    {
+        await exerciseService.AssignContraindicationsAsync(exerciseId, contraindicationIds);
+        return NoContent();
+    }
 }
 

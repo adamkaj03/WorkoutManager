@@ -20,17 +20,11 @@ public class Exercise : BaseEntity
      */
     public string Unit { get; set; } = string.Empty;
     
-    /**
-     * Megadja a gyakorlat sorrendjét a gyakorlatcsoporton belül.
-     */
-    public int Order { get; set; }
-    
     // Idegen kulcsok
-    public int ExerciseGroupId { get; set; }
     public int? EquipmentId { get; set; }
     
     // Navigation properties
-    public ExerciseGroup ExerciseGroup { get; set; } = null!;
+    public ICollection<ExerciseGroup> ExerciseGroups { get; set; } = new List<ExerciseGroup>();
     public Equipment? Equipment { get; set; }
     public ICollection<Contraindication> Contraindications { get; set; } = new List<Contraindication>();
 }

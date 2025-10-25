@@ -3,6 +3,7 @@ using WorkoutManager.Data;
 using WorkoutManager.Domain.Interfaces;
 using WorkoutManager.Domain.Interfaces.Repositories;
 using WorkoutManager.Infrastructure.Persistence.Repositories;
+using WorkoutManager.Models;
 
 namespace WorkoutManager.Infrastructure.Persistence.UnitOfWork;
 
@@ -11,7 +12,7 @@ public class EfUnitOfWork(WorkoutDbContext db) : IUnitOfWork
     public Task<int> SaveChangesAsync(CancellationToken ct = default)
         => db.SaveChangesAsync(ct);
 
-    public IRepository<T> GetRepository<T>() where T : class
+    public IRepository<T> GetRepository<T>() where T : BaseEntity
         => new EfRepository<T>(db);
 
     public async Task ExecuteInTransactionAsync(Func<Task> action, CancellationToken ct = default)

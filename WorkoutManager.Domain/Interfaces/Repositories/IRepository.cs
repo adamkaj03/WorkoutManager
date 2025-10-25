@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using WorkoutManager.Models;
 
 namespace WorkoutManager.Domain.Interfaces.Repositories;
 
@@ -8,16 +9,8 @@ namespace WorkoutManager.Domain.Interfaces.Repositories;
 /// <summary>
 /// Általános repository interfész, amely entitások kezelését biztosítja.
 /// </summary>
-public interface IRepository<T> where T : class
+public interface IRepository<T> where T : BaseEntity
 {
-    /// <summary>
-    /// Egy entitást ad vissza azonosító (id) alapján.
-    /// Ha nem található, <c>null</c>-t ad vissza.
-    /// </summary>
-    /// <param name="id">Azonosító érték (általában Guid, de nem kötelező).</param>
-    /// <param name="ct">Megszakítási token (CancellationToken).</param>
-    Task<T?> GetByIdAsync(object id, CancellationToken ct = default);
-
     /// <summary>
     /// Visszaad egy lekérdezhető forrást (IQueryable), amely tovább szűrhető.
     /// Ajánlott csak olvasási műveleteket használni, ne materializáld az egész halmazt egyszerre.
@@ -27,13 +20,13 @@ public interface IRepository<T> where T : class
     /// <summary>
     /// Egyetlen entitást keres, amely megfelel a megadott feltételnek (predicate), vagy <c>null</c>-t ad vissza.
     /// </summary>
-    Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate, CancellationToken ct = default);
+    Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate, bool includeDeleted = false, CancellationToken ct = default);
 
     /// <summary>
     /// Minden entitást visszaad, amely megfelel a megadott feltételnek.
     /// Ha a <paramref name="predicate"/> <c>null</c>, akkor az összes entitást visszaadja.
     /// </summary>
-    Task<List<T>> ListAsync(Expression<Func<T, bool>>? predicate = null, CancellationToken ct = default);
+    Task<List<T>> ListAsync(Expression<Func<T, bool>>? predicate = null, bool includeDeleted = false, CancellationToken ct = default);
 
     /// <summary>
     /// Megvizsgálja, hogy van-e olyan entitás, amely megfelel a megadott feltételnek.

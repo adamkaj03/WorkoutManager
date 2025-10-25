@@ -9,6 +9,7 @@
     <ItemGroup>
       <ProjectReference Include="..\WorkoutManager.Application\WorkoutManager.Application.csproj" />
       <ProjectReference Include="..\WorkoutManager.Domain\WorkoutManager.Domain.csproj" />
+      <ProjectReference Include="..\WorkoutManager.Shared\WorkoutManager.Shared.csproj" />
     </ItemGroup>
 
     <ItemGroup>

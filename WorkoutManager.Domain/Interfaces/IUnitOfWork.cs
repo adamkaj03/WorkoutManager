@@ -1,4 +1,5 @@
 ﻿using WorkoutManager.Domain.Interfaces.Repositories;
+using WorkoutManager.Models;
 
 namespace WorkoutManager.Domain.Interfaces;
 
@@ -24,7 +25,7 @@ public interface IUnitOfWork : IAsyncDisposable
     /// A repository ugyanazt a contextet/tranzakciót használja.
     /// </summary>
     /// <typeparam name="T">Az aggregátum gyökér típusa.</typeparam>
-    IRepository<T> GetRepository<T>() where T : class;
+    IRepository<T> GetRepository<T>() where T : BaseEntity;
 
     /// <summary>
     /// Adatbázis tranzakciót indít, és végrehajtja a megadott delegáltat benne.

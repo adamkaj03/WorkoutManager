@@ -20,6 +20,17 @@ public class WorkoutProgram : BaseEntity
      */
     public string Description { get; set; } = string.Empty;
     
+
+    /**
+     * Bemelegítés ideje percben (opcionális).
+     */
+    public int? WarmupDurationMinutes { get; set; }
+
+    /**
+     * Fő edzés ideje percben.
+     */
+    public int MainWorkoutDurationMinutes { get; set; }
+    
     // Navigation property
     public ICollection<ExerciseGroup> ExerciseGroups { get; set; } = new List<ExerciseGroup>();
 }

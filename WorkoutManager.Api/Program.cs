@@ -3,6 +3,7 @@ using WorkoutManager.Data;
 using System.Text.Json.Serialization;
 using WorkoutManager.Application.Extensions;
 using WorkoutManager.Application.Interfaces;
+using WorkoutManager.Extensions;
 using WorkoutManager.Infrastructure.Extensions;
 using WorkoutManager.Infrastructure.Services;
 
@@ -29,6 +30,8 @@ builder.Services.AddScoped<IEquipmentService, EquipmentService>();
 builder.Services.AddScoped<IEquipmentCategoryService, EquipmentCategoryService>();
 builder.Services.AddScoped<IContraindicationService, ContraindicationService>();
 
+builder.Services.AddExceptionHandling();
+
 // Add controllers
 builder.Services.AddControllers();
 
@@ -41,6 +44,8 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+app.UseExceptionHandling();
 
 app.UseHttpsRedirection();
 

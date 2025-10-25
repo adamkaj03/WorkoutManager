@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkoutManager.Application"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkoutManager.Infrastructure", "WorkoutManager.Infrastructure\WorkoutManager.Infrastructure.csproj", "{D43FF0BF-3A1E-42EF-8571-0EEF5A6DC7A9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkoutManager.Shared", "WorkoutManager.Shared\WorkoutManager.Shared.csproj", "{C66C2346-21D3-4BCC-A2F3-D731D55BDF5A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,11 +34,16 @@ Global
 		{D43FF0BF-3A1E-42EF-8571-0EEF5A6DC7A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D43FF0BF-3A1E-42EF-8571-0EEF5A6DC7A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D43FF0BF-3A1E-42EF-8571-0EEF5A6DC7A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C66C2346-21D3-4BCC-A2F3-D731D55BDF5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C66C2346-21D3-4BCC-A2F3-D731D55BDF5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C66C2346-21D3-4BCC-A2F3-D731D55BDF5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C66C2346-21D3-4BCC-A2F3-D731D55BDF5A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{20FC2982-B41B-40D0-B64D-E467A2AA0E85} = {685DD4C9-FD7B-40F2-9E46-EBB69DBFF9EE}
 		{98538B41-432B-489C-955F-9F151229AF65} = {685DD4C9-FD7B-40F2-9E46-EBB69DBFF9EE}
 		{D43FF0BF-3A1E-42EF-8571-0EEF5A6DC7A9} = {685DD4C9-FD7B-40F2-9E46-EBB69DBFF9EE}
 		{96ABE1B8-F971-435D-829A-33E69BBDB58A} = {685DD4C9-FD7B-40F2-9E46-EBB69DBFF9EE}
+		{C66C2346-21D3-4BCC-A2F3-D731D55BDF5A} = {685DD4C9-FD7B-40F2-9E46-EBB69DBFF9EE}
 	EndGlobalSection
 EndGlobal

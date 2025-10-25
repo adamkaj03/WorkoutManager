@@ -8,6 +8,11 @@ public class WorkoutProgramProfile : Profile
 {
     public WorkoutProgramProfile()
     {
-        CreateMap<WorkoutProgram, WorkoutProgramDto>().ReverseMap();
+        CreateMap<WorkoutProgram, WorkoutProgramDto>()
+            .ForMember(
+                dest => dest.WarmupDurationMinutes,
+                opt => opt.MapFrom(src => src.WarmupDurationMinutes ?? 0)
+            )
+            .ReverseMap();
     }
 }

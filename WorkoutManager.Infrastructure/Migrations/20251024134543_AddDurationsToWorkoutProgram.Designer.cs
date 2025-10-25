@@ -2,17 +2,20 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WorkoutManager.Data;
 
 #nullable disable
 
-namespace WorkoutManager.Migrations
+namespace WorkoutManager.Infrastructure.Migrations
 {
     [DbContext(typeof(WorkoutDbContext))]
-    partial class WorkoutDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251024134543_AddDurationsToWorkoutProgram")]
+    partial class AddDurationsToWorkoutProgram
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,36 +52,6 @@ namespace WorkoutManager.Migrations
                     b.HasIndex("ExercisesId");
 
                     b.ToTable("ExerciseContraindications", (string)null);
-                });
-
-            modelBuilder.Entity("ExerciseExerciseGroup", b =>
-                {
-                    b.Property<int>("ExerciseGroupsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ExercisesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ExerciseGroupsId", "ExercisesId");
-
-                    b.HasIndex("ExercisesId");
-
-                    b.ToTable("ExerciseExerciseGroups", (string)null);
-                });
-
-            modelBuilder.Entity("ExerciseGroupWorkoutProgram", b =>
-                {
-                    b.Property<int>("ExerciseGroupsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WorkoutProgramId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ExerciseGroupsId", "WorkoutProgramId");
-
-                    b.HasIndex("WorkoutProgramId");
-
-                    b.ToTable("WorkoutProgramExerciseGroups", (string)null);
                 });
 
             modelBuilder.Entity("WorkoutManager.Models.Contraindication", b =>
@@ -175,6 +148,9 @@ namespace WorkoutManager.Migrations
                     b.Property<int?>("EquipmentId")
                         .HasColumnType("int");
 
+                    b.Property<int>("ExerciseGroupId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -182,6 +158,9 @@ namespace WorkoutManager.Migrations
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("Quantity")
                         .HasColumnType("decimal(18,2)");
@@ -194,6 +173,8 @@ namespace WorkoutManager.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("EquipmentId");
+
+                    b.HasIndex("ExerciseGroupId");
 
                     b.ToTable("Exercises");
                 });
@@ -214,7 +195,15 @@ namespace WorkoutManager.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WorkoutProgramId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("WorkoutProgramId");
 
                     b.ToTable("ExerciseGroups");
                 });
@@ -286,36 +275,6 @@ namespace WorkoutManager.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ExerciseExerciseGroup", b =>
-                {
-                    b.HasOne("WorkoutManager.Models.ExerciseGroup", null)
-                        .WithMany()
-                        .HasForeignKey("ExerciseGroupsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WorkoutManager.Models.Exercise", null)
-                        .WithMany()
-                        .HasForeignKey("ExercisesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ExerciseGroupWorkoutProgram", b =>
-                {
-                    b.HasOne("WorkoutManager.Models.ExerciseGroup", null)
-                        .WithMany()
-                        .HasForeignKey("ExerciseGroupsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WorkoutManager.Models.WorkoutProgram", null)
-                        .WithMany()
-                        .HasForeignKey("WorkoutProgramId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("WorkoutManager.Models.Equipment", b =>
                 {
                     b.HasOne("WorkoutManager.Models.EquipmentCategory", "EquipmentCategory")
@@ -331,9 +290,29 @@ namespace WorkoutManager.Migrations
                 {
                     b.HasOne("WorkoutManager.Models.Equipment", "Equipment")
                         .WithMany("Exercises")
-                        .HasForeignKey("EquipmentId");
+                        .HasForeignKey("EquipmentId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("WorkoutManager.Models.ExerciseGroup", "ExerciseGroup")
+                        .WithMany("Exercises")
+                        .HasForeignKey("ExerciseGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Equipment");
+
+                    b.Navigation("ExerciseGroup");
+                });
+
+            modelBuilder.Entity("WorkoutManager.Models.ExerciseGroup", b =>
+                {
+                    b.HasOne("WorkoutManager.Models.WorkoutProgram", "WorkoutProgram")
+                        .WithMany("ExerciseGroups")
+                        .HasForeignKey("WorkoutProgramId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("WorkoutProgram");
                 });
 
             modelBuilder.Entity("WorkoutManager.Models.Equipment", b =>
@@ -344,6 +323,16 @@ namespace WorkoutManager.Migrations
             modelBuilder.Entity("WorkoutManager.Models.EquipmentCategory", b =>
                 {
                     b.Navigation("Equipment");
+                });
+
+            modelBuilder.Entity("WorkoutManager.Models.ExerciseGroup", b =>
+                {
+                    b.Navigation("Exercises");
+                });
+
+            modelBuilder.Entity("WorkoutManager.Models.WorkoutProgram", b =>
+                {
+                    b.Navigation("ExerciseGroups");
                 });
 #pragma warning restore 612, 618
         }

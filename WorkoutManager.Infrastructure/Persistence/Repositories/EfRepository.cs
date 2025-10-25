@@ -9,24 +9,38 @@ namespace WorkoutManager.Infrastructure.Persistence.Repositories;
 /**
  * Az osztályt a példában megadott projektből vettem át.
  */
-internal class EfRepository<T>(WorkoutDbContext db) : IRepository<T> where T : class
+internal class EfRepository<T>(WorkoutDbContext db) : IRepository<T> where T : BaseEntity
 {
     protected readonly WorkoutDbContext _db = db;
     protected readonly DbSet<T> _set = db.Set<T>();
-
-    public Task<T?> GetByIdAsync(object id, CancellationToken ct = default)
-        => _set.FindAsync([id], ct).AsTask();
     
     public async Task<List<T>> GetAllAsync(CancellationToken ct = default)
         => await _set.ToListAsync(ct);
 
     public IQueryable<T> AsQueryable() => _set.AsQueryable();
 
-    public Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate, CancellationToken ct = default)
-        => _set.FirstOrDefaultAsync(predicate, ct);
+    public Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate, bool includeDeleted = false, CancellationToken ct = default)
+    {
+        IQueryable<T> query = _set;
 
-    public async Task<List<T>> ListAsync(Expression<Func<T, bool>>? predicate = null, CancellationToken ct = default)
-        => predicate is null ? await _set.ToListAsync(ct) : await _set.Where(predicate).ToListAsync(ct);
+        if (includeDeleted)
+            query = query.IgnoreQueryFilters();
+
+        return query.FirstOrDefaultAsync(predicate, ct);
+    }
+
+    public async Task<List<T>> ListAsync(Expression<Func<T, bool>>? predicate = null, bool includeDeleted = false, CancellationToken ct = default)
+    {
+        IQueryable<T> query = _set;
+
+        if (includeDeleted)
+            query = query.IgnoreQueryFilters();
+
+        if (predicate != null)
+            query = query.Where(predicate);
+
+        return await query.ToListAsync(ct);
+    }
 
     public Task<bool> AnyAsync(Expression<Func<T, bool>>? predicate = null, CancellationToken ct = default)
         => predicate is null ? _set.AnyAsync(ct) : _set.AnyAsync(predicate, ct);
@@ -44,15 +58,8 @@ internal class EfRepository<T>(WorkoutDbContext db) : IRepository<T> where T : c
     // 7. feladathoz tartozó soft-delete
     public void Remove(T entity)
     { 
-        if (entity is BaseEntity baseEntity)
-        {
-            baseEntity.IsDeleted = true;
-            _set.Update(entity); // vagy _context.Entry(entity).State = EntityState.Modified;
-        }
-        else
-        {
-            _set.Remove(entity); // fallback, ha nem BaseEntity
-        }
+        entity.IsDeleted = true;
+        _set.Update(entity); // vagy _context.Entry(entity).State = EntityState.Modified;
     }
 
     public void RemoveRange(IEnumerable<T> entities)

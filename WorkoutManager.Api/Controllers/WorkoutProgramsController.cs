@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using WorkoutManager.Application.DTOs;
 using WorkoutManager.Application.Interfaces;
 using WorkoutManager.DTOs;
 using WorkoutManager.Models;
@@ -12,7 +13,7 @@ public class WorkoutProgramsController(IWorkoutProgramService workoutProgramServ
     : CrudController<WorkoutProgram, WorkoutProgramDto>(workoutProgramService, mapper)
 {
     // 5. feladathoz tartozó GET végpont
-    [HttpGet("{id}")]
+    [HttpGet("full/{id}")]
     public async Task<ActionResult<WorkoutProgramDto>> GetFull(int id)
     {
         var entity = await workoutProgramService.GetFullWorkoutProgramAsync(id);
@@ -21,6 +22,23 @@ public class WorkoutProgramsController(IWorkoutProgramService workoutProgramServ
 
         var dto = mapper.Map<WorkoutProgramDto>(entity);
         return Ok(dto);
+    }
+    
+    [HttpPost("{workoutProgramId}/exercise-groups")]
+    public async Task<IActionResult> AssignExerciseGroupsToWorkoutPrograms(
+        int workoutProgramId,
+        [FromBody] List<int> exerciseGroupIds)
+    {
+        await workoutProgramService.AssignExerciseGroupsAsync(workoutProgramId, exerciseGroupIds);
+        return NoContent();
+    }
+    
+    [HttpGet("by-exercise/{exerciseId}/contraindications")]
+    public async Task<ActionResult<IEnumerable<WorkoutProgramWithContraindicationsDto>>> GetAllTitleAndContraindicationByExerciseAsync(
+        int exerciseId)
+    {
+        var dtos = await workoutProgramService.GetAllTitleAndContraindicationByExerciseAsync(exerciseId);
+        return Ok(dtos);
     }
 }
 
