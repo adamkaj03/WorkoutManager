@@ -9,7 +9,7 @@ namespace WorkoutManager.Infrastructure.Persistence.Repositories;
 /**
  * Az osztályt a példában megadott projektből vettem át.
  */
-internal class EfRepository<T>(WorkoutDbContext db) : IRepository<T> where T : BaseEntity
+internal class EfRepository<T>(WorkoutDbContext db) : IRepository<T> where T : class
 {
     protected readonly WorkoutDbContext _db = db;
     protected readonly DbSet<T> _set = db.Set<T>();
@@ -57,9 +57,18 @@ internal class EfRepository<T>(WorkoutDbContext db) : IRepository<T> where T : B
     
     // 7. feladathoz tartozó soft-delete
     public void Remove(T entity)
-    { 
-        entity.IsDeleted = true;
-        _set.Update(entity); // vagy _context.Entry(entity).State = EntityState.Modified;
+    {
+        var baseEntity = entity as BaseEntity;
+        if (baseEntity != null)
+        {
+            baseEntity.IsDeleted = true;
+            _set.Update(entity);
+        }
+        else
+        {
+            _set.Remove(entity);
+        }
+        _set.Update(entity);
     }
 
     public void RemoveRange(IEnumerable<T> entities)

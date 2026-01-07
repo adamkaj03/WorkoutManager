@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WorkoutManager.Data;
@@ -6,6 +7,7 @@ using WorkoutManager.Domain.Interfaces;
 using WorkoutManager.Domain.Interfaces.Repositories;
 using WorkoutManager.Infrastructure.Persistence.Repositories;
 using WorkoutManager.Infrastructure.Persistence.UnitOfWork;
+using WorkoutManager.Models;
 
 namespace WorkoutManager.Infrastructure.Extensions;
 
@@ -25,6 +27,7 @@ public static class ServiceCollectionExtensions
 
         // Open generic repository registration – covers IRepository<T> for ANY T
         services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+        services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
 
         services.Scan(scan => scan
             .FromAssemblies(typeof(WorkoutDbContext).Assembly)

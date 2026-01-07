@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using WorkoutManager.Application.DTOs;
 using WorkoutManager.DTOs;
 using WorkoutManager.Models;
 

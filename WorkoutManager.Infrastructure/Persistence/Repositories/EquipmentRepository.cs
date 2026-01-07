@@ -16,4 +16,11 @@ internal sealed class EquipmentRepository(WorkoutDbContext db) :  EfRepository<E
         => await _db.Equipment
             .Where(e => e.Contraindications.Any(c => c.Id == contraindicationId))
             .ToListAsync(ct);
+    
+    public async Task<List<Equipment>> GetByContraindicationsAsync(List<int> contraindicationIds, CancellationToken ct = default)
+        => await _db.Equipment
+            .Include(e => e.Contraindications)
+            .Where(e => e.Contraindications.Any(c => contraindicationIds.Contains(c.Id)))
+            .Distinct()
+            .ToListAsync(ct);
 }

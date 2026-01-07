@@ -1,7 +1,7 @@
 ﻿namespace WorkoutManager.Shared.Exceptions;
 
 /// <summary>
-/// Represents errors that occur when a requested resource is not found.
+/// Hibát reprezentál, amely akkor fordul elő, amikor egy kért erőforrás nem található.
 /// </summary>
 public class NotFoundException : Exception
 {

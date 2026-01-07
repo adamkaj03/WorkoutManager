@@ -3,9 +3,6 @@ using WorkoutManager.Models;
 
 namespace WorkoutManager.Domain.Interfaces;
 
-/**
- * Az interface-t a példában megadott projektből vettem át.
- */
 /// <summary>
 /// Tranzakciós műveletek koordinálása több repository között.
 /// EF Core-ban a DbContext már unit of work-ként működik, de ez az absztrakció

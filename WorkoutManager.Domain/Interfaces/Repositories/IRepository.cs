@@ -9,7 +9,7 @@ namespace WorkoutManager.Domain.Interfaces.Repositories;
 /// <summary>
 /// Általános repository interfész, amely entitások kezelését biztosítja.
 /// </summary>
-public interface IRepository<T> where T : BaseEntity
+public interface IRepository<T> where T : class
 {
     /// <summary>
     /// Visszaad egy lekérdezhető forrást (IQueryable), amely tovább szűrhető.

@@ -7,4 +7,6 @@ public interface IEquipmentRepository : IRepository<Equipment>
     Task<List<Equipment>> GetByCategoryAsync(int categoryId, CancellationToken ct = default);
 
     Task<List<Equipment>> GetByContraindicationAsync(int contraindicationId, CancellationToken ct = default);
+    
+    Task<List<Equipment>> GetByContraindicationsAsync(List<int> contraindicationIds, CancellationToken ct = default);
 }
