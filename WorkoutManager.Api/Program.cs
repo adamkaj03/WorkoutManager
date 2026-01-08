@@ -10,7 +10,6 @@ using WorkoutManager.Domain.Entities;
 using WorkoutManager.Extensions;
 using WorkoutManager.Infrastructure.Extensions;
 using WorkoutManager.Infrastructure.Services;
-using WorkoutManager.Middlewares;
 using WorkoutManager.Models;
 using WorkoutManager.Seed;
 using Microsoft.OpenApi.Models;
@@ -18,11 +17,10 @@ using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+// Service hozzáadása az OpenAPI támogatáshoz
 builder.Services.AddOpenApi();
 
-// Configure Swagger/OpenAPI
+// Swagger konfiguráció
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -38,7 +36,7 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 
-    // JWT Authentication configuration for Swagger
+    // JWT Authentication konfiguráció Swaggerhez
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = "JWT Authorization header using the Bearer scheme. Enter 'Bearer' [space] and then your token in the text input below.",
@@ -63,7 +61,7 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 
-    // XML Comments for better documentation
+    // XML kommentek beolvasása a dokumentációhoz
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFilename);
     if (File.Exists(xmlPath))
@@ -72,14 +70,14 @@ builder.Services.AddSwaggerGen(options =>
     }
 });
 
-// Configure JSON serialization to handle circular references
+// Konfigurálja a JSON szerializációs beállításokat
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
     options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
 });
 
-// Add DbContext
+// DbContext és egyéb infrastruktúra szolgáltatások hozzáadása
 builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddScoped<IWorkoutProgramService, WorkoutProgramService>();
@@ -96,10 +94,6 @@ builder.Services.AddScoped<ICacheService, MemoryCacheService>();
 
 builder.Services.AddExceptionHandling();
 builder.Services.AddResponseWrapper();
-
-/*builder.Services.AddIdentity<User, Role>()
-    .AddEntityFrameworkStores<WorkoutDbContext>()
-    .AddDefaultTokenProviders();*/
 
 builder.Services.AddIdentityCore<User>()
     .AddRoles<Role>()
@@ -124,14 +118,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
-// Add controllers
+// Controller hozzáadása
 builder.Services.AddControllers();
 
 builder.Services.AddAppServices();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();

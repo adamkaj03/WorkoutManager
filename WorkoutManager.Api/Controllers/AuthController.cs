@@ -94,6 +94,7 @@ public class AuthController(UserManager<User> userManager, IConfiguration config
     /// <summary>
     /// JWT token generálása a felhasználó számára.
     /// A token tartalmazza a felhasználó azonosítóját, nevét, email címét és szerepköreit.
+    /// Todo: Ezt esetleg valami service-be kéne rakni
     /// </summary>
     /// <param name="user">A felhasználó, akinek a tokent generáljuk</param>
     /// <returns>Generált JWT token string formátumban</returns>

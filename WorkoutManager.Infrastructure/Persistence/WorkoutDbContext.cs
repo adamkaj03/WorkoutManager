@@ -46,10 +46,9 @@ public class WorkoutDbContext(DbContextOptions<WorkoutDbContext> options) : Iden
             entity.HasOne(ur => ur.Role)
                 .WithMany(r => r.UserRoles)
                 .HasForeignKey(ur => ur.RoleId)
-                .OnDelete(DeleteBehavior.Restrict); // vagy .OnDelete(DeleteBehavior.NoAction)
+                .OnDelete(DeleteBehavior.Restrict);
         });
-
-        // Configure WorkoutProgram
+        
         modelBuilder.Entity<WorkoutProgram>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -70,15 +69,13 @@ public class WorkoutDbContext(DbContextOptions<WorkoutDbContext> options) : Iden
             entity.HasQueryFilter(e => !e.IsDeleted);
         });
 
-        // Configure ExerciseGroup
         modelBuilder.Entity<ExerciseGroup>(entity =>
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
             entity.HasQueryFilter(e => !e.IsDeleted);
         });
-
-        // Configure Exercise
+        
         modelBuilder.Entity<Exercise>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -86,20 +83,19 @@ public class WorkoutDbContext(DbContextOptions<WorkoutDbContext> options) : Iden
             entity.Property(e => e.Quantity).HasColumnType("decimal(18,2)");
             entity.Property(e => e.Unit).IsRequired().HasMaxLength(20);
 
-            // Many-to-One: Exercise -> ExerciseGroup
+            // Many-to-One
             entity.HasMany(e => e.ExerciseGroups)
                 .WithMany(eq => eq.Exercises)
                 .UsingEntity(j => j.ToTable("ExerciseExerciseGroups"));
 
-            // Many-to-Many: Exercise <-> Contraindication
+            // Many-to-Many
             entity.HasMany(e => e.Contraindications)
                 .WithMany(c => c.Exercises)
                 .UsingEntity(j => j.ToTable("ExerciseContraindications"));
             
             entity.HasQueryFilter(e => !e.IsDeleted);
         });
-
-        // Configure Equipment
+        
         modelBuilder.Entity<Equipment>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -111,15 +107,14 @@ public class WorkoutDbContext(DbContextOptions<WorkoutDbContext> options) : Iden
                 .HasForeignKey(e => e.EquipmentCategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Many-to-Many: Equipment <-> Contraindication
+            // Many-to-Many
             entity.HasMany(e => e.Contraindications)
                 .WithMany(c => c.Equipment)
                 .UsingEntity(j => j.ToTable("EquipmentContraindications"));
             
             entity.HasQueryFilter(e => !e.IsDeleted);
         });
-
-        // Configure EquipmentCategory
+        
         modelBuilder.Entity<EquipmentCategory>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -127,8 +122,7 @@ public class WorkoutDbContext(DbContextOptions<WorkoutDbContext> options) : Iden
             entity.Property(e => e.Description).HasMaxLength(500);
             entity.HasQueryFilter(e => !e.IsDeleted);
         });
-
-        // Configure Contraindication
+        
         modelBuilder.Entity<Contraindication>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -144,7 +138,6 @@ public class WorkoutDbContext(DbContextOptions<WorkoutDbContext> options) : Iden
                 .UsingEntity(j => j.ToTable("WorkoutProgramUsers"));
         });
         
-        // Seed initial data for Roles
         modelBuilder.Entity<Role>().HasData(
             new Role { Id = "2847bd82-071c-44b2-8f6b-5540c7d70370", Name = RoleNames.Admin, NormalizedName = RoleNames.Admin.ToUpper() },
             new Role { Id = "2bae9d45-61c1-44ba-9e26-9ad7b0752b53", Name = RoleNames.Writer, NormalizedName = RoleNames.Writer.ToUpper() },
